@@ -1,3 +1,5 @@
+import sha256 from 'crypto-js/sha256';
+
 interface Data {
   amount: number;
   recipient: string;
@@ -7,26 +9,26 @@ interface Data {
 export default class Block {
   data: Data;
   hash: string;
-  index: number;
-  previousHash: string;
+  id: number;
+  previousHash?: string;
   timestamp: number;
 
   constructor(
-    index: number,
+    id: number,
     timestamp: number,
-    previousHash: string,
     data: Data,
+    previousHash?: string
   ) {
-    this.data = data;
-    this.hash = this.calculateHash();
-    this.index = index;
-    this.previousHash = previousHash;
+    this.id = id;
     this.timestamp = timestamp;
+    this.data = data;
+    this.previousHash = previousHash;
+    this.hash = this.calculateHash();
   }
 
   calculateHash() {
     const stringifiedData = JSON.stringify(this.data);
-    const hash = sha256(`${this.index}${this.previousHash}${this.timestamp}${stringifiedData}`);
+    const hash = sha256(`${this.id}${this.previousHash}${this.timestamp}${stringifiedData}`);
     return hash.toString();
   }
 }

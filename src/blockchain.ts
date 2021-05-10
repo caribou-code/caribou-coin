@@ -1,38 +1,5 @@
 // https://www.youtube.com/watch?v=zVqczFZr124
-import sha256 from 'crypto-js/sha256';
-
-interface Data {
-  amount: number;
-  recipient: string;
-  sender: string;
-}
-
-export class Block {
-  data: Data;
-  hash: string;
-  index: number;
-  previousHash?: string;
-  timestamp: number;
-
-  constructor(
-    index: number,
-    timestamp: number,
-    data: Data,
-    previousHash?: string,
-  ) {
-    this.data = data;
-    this.hash = this.calculateHash();
-    this.index = index;
-    this.previousHash = previousHash;
-    this.timestamp = timestamp;
-  }
-
-  calculateHash() {
-    const stringifiedData = JSON.stringify(this.data);
-    const hash = sha256(`${this.index}${this.previousHash}${this.timestamp}${stringifiedData}`);
-    return hash.toString();
-  }
-}
+import Block from './block';
 
 export default class BlockChain {
   chain: any[];
@@ -49,15 +16,23 @@ export default class BlockChain {
         amount: 10,
         recipient: 'Erin',
         sender: 'Rich',
-      }
+      },
+      'x'
     );
   }
 
   addBlock(block: Block) {
-    this.chain.push({
-      ...block,
-      hash: block.calculateHash(),
-      previousHash: this.chain[this.chain.length - 1].hash
+    block.previousHash = this.chain[this.chain.length - 1].hash;
+    block.hash = block.calculateHash();
+    this.chain.push(block);
+  }
+
+  isChainValid() {
+    return this.chain.every((block, index) => {
+      if (index === 0) return true;
+      const isHashCorrect = block.hash === block.calculateHash();
+      const isHashMatching = block.previousHash === this.chain[index - 1].hash;
+      return isHashCorrect && isHashMatching;
     });
   }
 }

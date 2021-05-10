@@ -8,7 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "isolatedModules": true,
-    "lib": ["DOM", "ES6", "ES7"],
+    "lib": ["DOM", "ES6"],
     "module": "commonjs",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
