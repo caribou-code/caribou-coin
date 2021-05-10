@@ -1,5 +1,5 @@
-import Block from './block';
-import BlockChain from './blockchain';
+import Block from './modules/block';
+import BlockChain from './modules/blockchain';
 
 console.log('Running application...');
 
